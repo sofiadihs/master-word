@@ -3,374 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VerbMaster: Speak & Match | 3000 Verbs | Audio Pronunciation</title>
+    <meta name="theme-color" content="#0b1120">
+    <meta name="description" content="Belajar 3000 kata kerja Inggris-Indonesia dengan game mencocokkan interaktif + suara pelafalan">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    <title>VerbMaster - Belajar 3000 Kata Kerja Inggris</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #0a0f1a, #12182a, #1e1a3a);
-            background-attachment: fixed;
-            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            padding: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Animasi */
-        @keyframes cardAppear {
-            from { opacity: 0; transform: scale(0.9) translateY(8px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @keyframes matchGlow {
-            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); background: #bbf7d0; }
-            50% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0.3); background: #86efac; }
-            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); background: #bbf7d0; }
-        }
-
-        @keyframes mismatchShake {
-            0%,100% { transform: translateX(0); background: #fee2e2; }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
-        }
-
-        @keyframes floatingParticles {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        @keyframes bounceReward {
-            0% { transform: scale(0.2) rotate(-10deg); opacity: 0; }
-            60% { transform: scale(1.1) rotate(3deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        @keyframes starSpin {
-            0% { transform: rotate(0deg) scale(0.5); opacity: 0; }
-            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1); opacity: 1; }
-        }
-
-        @keyframes speakPulse {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); }
-            70% { box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-        }
-
-        .game-wrapper {
-            max-width: 100%;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 32px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(115deg, #0b1120, #1e1b3a);
-            padding: 10px 14px;
-            border-bottom: 2px solid #f97316;
-        }
-
-        .level-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffedd5, #fb923c);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .phase-badge {
-            background: #0f172a;
-            padding: 2px 10px;
-            border-radius: 40px;
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #facc15;
-        }
-
-        .level-selector {
-            background: #0f172a;
-            padding: 2px 8px;
-            border-radius: 40px;
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .level-selector select {
-            background: #f97316;
-            border: none;
-            padding: 3px 10px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-family: inherit;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-
-        .sub {
-            font-size: 0.55rem;
-            margin-top: 4px;
-            color: #cbd5e1;
-            text-align: center;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            background: #0f172ad9;
-            padding: 5px 12px;
-            backdrop-filter: blur(8px);
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .score-board, .match-counter, .message-area {
-            background: #1e293b;
-            padding: 3px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            color: #ffd966;
-        }
-
-        .message-area {
-            background: #fef9c3;
-            color: #854d0e;
-            flex: 1;
-            text-align: center;
-            font-size: 0.65rem;
-            font-weight: 600;
-        }
-
-        .game-board {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            padding: 12px 12px;
-            background: #fef9e8;
-        }
-
-        .column {
-            flex: 1;
-            background: #f1f5f9;
-            border-radius: 24px;
-            padding: 10px 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            min-width: 0;
-        }
-
-        .column h3 {
-            text-align: center;
-            margin-bottom: 8px;
-            font-size: 0.75rem;
-            background: #1e293b;
-            padding: 4px 0;
-            border-radius: 40px;
-            color: white;
-        }
-
-        .card-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: none;
-            overflow-y: visible;
-        }
-
-        /* Kartu ramping dengan ikon speaker */
-        .card {
-            background: white;
-            border-radius: 40px;
-            padding: 8px 8px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            border: 1.5px solid #e2e8f0;
-            word-break: break-word;
-            animation: cardAppear 0.2s ease backwards;
-            letter-spacing: 0.2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            position: relative;
-        }
-
-        /* Ikon speaker kecil di kartu Inggris */
-        .speak-icon {
-            font-size: 0.75rem;
-            background: #3b82f6;
-            color: white;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.1s;
-            flex-shrink: 0;
-        }
-        .speak-icon:active {
-            transform: scale(0.9);
-        }
-        .speak-icon:hover {
-            background: #2563eb;
-        }
-        .card-text {
-            flex: 1;
-        }
-
-        @media (max-width: 550px) {
-            .card { padding: 6px 6px; font-size: 0.8rem; }
-            .speak-icon { width: 20px; height: 20px; font-size: 0.65rem; }
-            .column h3 { font-size: 0.7rem; margin-bottom: 6px; }
-            .game-board { gap: 8px; padding: 10px 10px; }
-        }
-
-        @media (max-width: 400px) {
-            .card { padding: 5px 5px; font-size: 0.75rem; }
-            .speak-icon { width: 18px; height: 18px; font-size: 0.6rem; }
-        }
-
-        .card:active { transform: scale(0.97); }
-        .selected {
-            background: #fed7aa;
-            border: 2px solid #f97316;
-            transform: scale(0.98);
-        }
-        .matched {
-            background: linear-gradient(145deg, #bef264, #a3e635);
-            border-color: #15803d;
-            text-decoration: line-through;
-            opacity: 0.8;
-            cursor: default;
-            pointer-events: none;
-            color: #14532d;
-        }
-        .matched .speak-icon {
-            display: none;
-        }
-        .matched::after {
-            content: " ✓";
-            font-weight: bold;
-            font-size: 0.75rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { min-height: 100vh; background: linear-gradient(145deg, #0a0f1a, #12182a, #1e1a3a); font-family: 'Segoe UI', system-ui, sans-serif; padding: 8px; display: flex; justify-content: center; align-items: center; }
+        @keyframes cardAppear { from { opacity: 0; transform: scale(0.9) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes matchGlow { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.7); background: #bbf7d0; } 50% { box-shadow: 0 0 0 8px rgba(74,222,128,0.3); background: #86efac; } 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); background: #bbf7d0; } }
+        @keyframes mismatchShake { 0%,100% { transform: translateX(0); background: #fee2e2; } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        @keyframes floatingParticles { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        @keyframes bounceReward { 0% { transform: scale(0.2) rotate(-10deg); opacity: 0; } 60% { transform: scale(1.1) rotate(3deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        @keyframes speakPulse { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 6px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
+        .game-wrapper { max-width: 100%; width: 100%; background: rgba(255,255,255,0.97); border-radius: 32px; box-shadow: 0 15px 30px rgba(0,0,0,0.25); overflow: hidden; }
+        .header { background: linear-gradient(115deg, #0b1120, #1e1b3a); padding: 10px 14px; border-bottom: 2px solid #f97316; }
+        .level-info { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .title { font-size: 1.1rem; font-weight: 800; background: linear-gradient(135deg, #ffedd5, #fb923c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .phase-badge { background: #0f172a; padding: 2px 10px; border-radius: 40px; font-size: 0.6rem; font-weight: bold; color: #facc15; }
+        .level-selector { background: #0f172a; padding: 2px 8px; border-radius: 40px; display: flex; gap: 5px; align-items: center; }
+        .level-selector select { background: #f97316; border: none; padding: 3px 10px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 0.7rem; }
+        .sub { font-size: 0.55rem; margin-top: 4px; color: #cbd5e1; text-align: center; }
+        .stats { display: flex; justify-content: space-between; background: #0f172ad9; padding: 5px 12px; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .score-board, .match-counter, .message-area { background: #1e293b; padding: 3px 12px; border-radius: 40px; font-size: 0.7rem; color: #ffd966; }
+        .message-area { background: #fef9c3; color: #854d0e; flex: 1; text-align: center; font-size: 0.65rem; font-weight: 600; }
+        .game-board { display: flex; gap: 10px; padding: 12px; background: #fef9e8; }
+        .column { flex: 1; background: #f1f5f9; border-radius: 24px; padding: 10px 8px; min-width: 0; }
+        .column h3 { text-align: center; margin-bottom: 8px; font-size: 0.75rem; background: #1e293b; padding: 4px 0; border-radius: 40px; color: white; }
+        .card-list { display: flex; flex-direction: column; gap: 6px; }
+        .card { background: white; border-radius: 40px; padding: 8px; text-align: center; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1.5px solid #e2e8f0; display: flex; align-items: center; justify-content: center; gap: 6px; animation: cardAppear 0.2s ease backwards; }
+        .speak-icon { font-size: 0.75rem; background: #3b82f6; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .card-text { flex: 1; }
+        @media (max-width: 550px) { .card { padding: 6px; font-size: 0.8rem; } .speak-icon { width: 20px; height: 20px; font-size: 0.65rem; } }
+        .selected { background: #fed7aa; border: 2px solid #f97316; transform: scale(0.98); }
+        .matched { background: linear-gradient(145deg, #bef264, #a3e635); border-color: #15803d; text-decoration: line-through; opacity: 0.8; pointer-events: none; color: #14532d; }
+        .matched .speak-icon { display: none; }
         .match-animation { animation: matchGlow 0.5s ease-out; }
         .wrong-animation { animation: mismatchShake 0.25s ease-in-out; }
         .speak-pulse { animation: speakPulse 0.4s ease-out; }
-
-        .control-bar {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 16px 16px;
-            background: #f1f5f9;
-            flex-wrap: wrap;
-        }
-        button {
-            background: #1e293b;
-            border: none;
-            font-family: inherit;
-            font-weight: bold;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            transition: 0.1s;
-        }
-        button:active { transform: translateY(1px); }
+        .control-bar { display: flex; justify-content: center; gap: 10px; padding: 12px 16px 16px; background: #f1f5f9; flex-wrap: wrap; }
+        button { background: #1e293b; border: none; font-weight: bold; padding: 6px 16px; border-radius: 40px; font-size: 0.7rem; cursor: pointer; color: white; }
         .btn-primary { background: #f97316; color: #1c1917; }
-        .phase-nav {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin-top: 4px;
-        }
-        .phase-btn {
-            background: #334155;
-            font-size: 0.6rem;
-            padding: 3px 10px;
-        }
+        .phase-nav { display: flex; gap: 6px; justify-content: center; margin-top: 4px; }
+        .phase-btn { background: #334155; font-size: 0.6rem; padding: 3px 10px; }
         .phase-btn.active { background: #f97316; color: white; }
-
-        .reward-popup {
-            position: fixed;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #1f2937;
-            font-size: 1.3rem;
-            font-weight: 800;
-            padding: 12px 24px;
-            border-radius: 60px;
-            z-index: 1200;
-            animation: bounceReward 0.45s ease forwards;
-            white-space: nowrap;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 2px solid white;
-            pointer-events: none;
-        }
-        .star-burst {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            font-size: 2.8rem;
-            pointer-events: none;
-            z-index: 1199;
-            animation: starSpin 0.5s ease-out forwards;
-        }
-        .confetti-particle {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: gold;
-            pointer-events: none;
-            z-index: 1000;
-            animation: floatingParticles 0.7s ease-out forwards;
-        }
-        @media (max-width: 550px) {
-            .reward-popup { font-size: 1rem; padding: 8px 18px; }
-            .star-burst { font-size: 2rem; }
-        }
+        .reward-popup { position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; font-size: 1.3rem; font-weight: 800; padding: 12px 24px; border-radius: 60px; z-index: 1200; animation: bounceReward 0.45s ease forwards; white-space: nowrap; pointer-events: none; }
+        .confetti-particle { position: fixed; width: 8px; height: 8px; background: gold; pointer-events: none; z-index: 1000; animation: floatingParticles 0.7s ease-out forwards; }
     </style>
 </head>
 <body>
-<div class="game-wrapper" id="gameApp">
+<div class="game-wrapper">
     <div class="header">
         <div class="level-info">
-            <div class="title">🔊 VERB MASTER · SPEAK & MATCH 🔊</div>
+            <div class="title">🔊 VERB MASTER · 3000 🔊</div>
             <div class="phase-badge" id="phaseBadge">🌟 BASIC</div>
-            <div class="level-selector">
-                <span>📘 LV</span>
-                <select id="levelSelect"></select>
-            </div>
+            <div class="level-selector"><span>📘 LV</span><select id="levelSelect"></select></div>
         </div>
-        <div class="sub">✨ Tekan 🔵 speaker di kata Inggris untuk dengar pelafalan | Cocokkan dengan arti ✨</div>
+        <div class="sub">✨ BASIC → INTERMEDIATE → ADVANCED | Tekan 🔵 speaker untuk dengar pelafalan ✨</div>
         <div class="phase-nav">
             <button id="phaseBasicBtn" class="phase-btn active">🌱 BASIC</button>
             <button id="phaseInterBtn" class="phase-btn">⚡ INTERMEDIATE</button>
@@ -383,227 +73,62 @@
         <div id="statusMessage" class="message-area">🎯 Ketuk Inggris → lalu Indonesia! (🔊 untuk dengar)</div>
     </div>
     <div class="game-board">
-        <div class="column">
-            <h3>🇬🇧 ENGLISH VERB <span style="font-size:0.6rem;">🔊 tap speaker</span></h3>
-            <div id="englishList" class="card-list"></div>
-        </div>
-        <div class="column">
-            <h3>🇮🇩 BAHASA INDONESIA</h3>
-            <div id="indonesianList" class="card-list"></div>
-        </div>
+        <div class="column"><h3>🇬🇧 ENGLISH VERB</h3><div id="englishList" class="card-list"></div></div>
+        <div class="column"><h3>🇮🇩 BAHASA INDONESIA</h3><div id="indonesianList" class="card-list"></div></div>
     </div>
     <div class="control-bar">
-        <button id="resetLevelBtn" class="reset-btn">⟳ Ulang</button>
-        <button id="prevLevelBtn" class="reset-btn">◀ Prev</button>
+        <button id="resetLevelBtn">⟳ Ulang</button>
+        <button id="prevLevelBtn">◀ Prev</button>
         <button id="nextLevelBtn" class="btn-primary">Next ▶</button>
     </div>
 </div>
-
 <script>
-    // ================ DATABASE 3000 VERBS (Basic → Advanced) ================
-    const basicVerbs = ["be","have","do","say","get","make","go","know","take","see","come","think","look","want","give","use","find","tell","ask","work","seem","feel","try","leave","call","need","become","put","mean","keep","let","begin","help","talk","turn","start","show","hear","play","run","move","like","live","believe","hold","bring","happen","write","sit","stand","lose","pay","meet","include","continue","set","learn","change","lead","understand","watch","follow","stop","create","speak","allow","win","decide","explain","hope","develop","carry","train","eat","sleep","wake","drive","fly","swim","read"];
-    const basicIndo = ["menjadi/ada","memiliki","melakukan","mengatakan","mendapatkan","membuat","pergi","tahu","mengambil","melihat","datang","berpikir","melihat/memandang","ingin","memberi","menggunakan","menemukan","memberi tahu","bertanya","bekerja","tampak","merasa","mencoba","meninggalkan","memanggil","memerlukan","menjadi","meletakkan","berarti","menjaga","membiarkan","memulai","membantu","berbicara","memutar/berbelok","memulai","menunjukkan","mendengar","bermain","berlari","bergerak","menyukai","tinggal","percaya","memegang","membawa","terjadi","menulis","duduk","berdiri","kehilangan","membayar","bertemu","termasuk","melanjutkan","mengatur","belajar","mengubah","memimpin","mengerti","menonton","mengikuti","berhenti","menciptakan","berbicara","mengizinkan","menang","memutuskan","menjelaskan","berharap","mengembangkan","membawa","melatih","makan","tidur","bangun","mengemudi","terbang","berenang","membaca"];
-    
-    const intermediateVerbs = ["achieve","admire","admit","adopt","advise","affect","announce","apologize","appear","apply","arrange","attack","avoid","borrow","cancel","capture","celebrate","collect","compare","compete","complain","complete","concern","confirm","connect","consider","consist","consult","contain","convince","cooperate","correct","criticize","declare","decrease","defend","define","deliver","demand","deny","describe","destroy","determine","discover","discuss","disturb","earn","encourage","enjoy","establish","estimate","evaluate","examine","exchange","exist","expand","expect","experience","explore","express","extend","fail","fear","fill","fix","focus","forgive","gain","gather","generate","guarantee","handle","hate","identify","ignore","improve","increase","indicate","influence","inform"];
-    const intermediateIndo = ["mencapai","mengagumi","mengakui","mengadopsi","menasihati","memengaruhi","mengumumkan","meminta maaf","muncul/tampak","melamar/menerapkan","mengatur","menyerang","menghindari","meminjam","membatalkan","menangkap","merayakan","mengumpulkan","membandingkan","bersaing","mengeluh","menyelesaikan","menyangkut","mengkonfirmasi","menghubungkan","mempertimbangkan","terdiri dari","berkonsultasi","berisi","meyakinkan","bekerja sama","mengoreksi","mengkritik","menyatakan","menurunkan","membela","mendefinisikan","mengirimkan","menuntut","menyangkal","mendeskripsikan","menghancurkan","menentukan","menemukan","mendiskusikan","mengganggu","menghasilkan uang","mendorong","menikmati","membangun","memperkirakan","mengevaluasi","memeriksa","menukar","ada","memperluas","mengharapkan","mengalami","menjelajahi","mengekspresikan","memperpanjang","gagal","takut","mengisi","memperbaiki","fokus","memaafkan","memperoleh","mengumpulkan","menghasilkan","menjamin","menangani","membenci","mengidentifikasi","mengabaikan","memperbaiki","meningkatkan","menunjukkan","memengaruhi","memberi tahu"];
-    
-    const advancedVerbs = ["abandon","abolish","absorb","accommodate","accompany","accomplish","accuse","acknowledge","adapt","advocate","allocate","anticipate","appreciate","approach","assemble","assess","assign","assist","assume","assure","clarify","collaborate","commemorate","compensate","compile","comprehend","compromise","conceive","condemn","conduct","confess","confine","confront","conquer","conserve","consolidate","constitute","constrain","contemplate","contradict","contribute","convey","convict","coordinate","correspond","debate","dedicate","delegate","demonstrate","depict","deprive","derive","descend","detect","deteriorate","devote","differentiate","diminish","discard","discern","disclose","discriminate","displace","dispose","distinguish","distort","divert","dominate","eliminate","embrace","emerge","emphasize","empower","enable","encounter","endure","enhance","enrich","ensure","entail"];
-    const advancedIndo = ["meninggalkan","menghapuskan","menyerap","menampung","menemani","mencapai","menuduh","mengakui","menyesuaikan","menganjurkan","mengalokasikan","mengantisipasi","menghargai","mendekati","merakit","menilai","menugaskan","membantu","berasumsi","meyakinkan","memperjelas","berkolaborasi","memperingati","memberi kompensasi","menyusun","memahami","berkompromi","menciptakan","mengutuk","melakukan","mengaku","membatasi","menghadapi","menaklukkan","melestarikan","menggabungkan","membentuk","membatasi","merenungkan","membantah","berkontribusi","menyampaikan","menghukum","mengoordinasikan","berkorespondensi","berdebat","mendedikasikan","mendelegasikan","mendemonstrasikan","menggambarkan","merampas","berasal","turun","mendeteksi","memburuk","mengabdikan","membedakan","mengurangi","membuang","membedakan","mengungkapkan","mendiskriminasi","memindahkan","membuang","membedakan","memutarbalikkan","mengalihkan","mendominasi","menghilangkan","merangkul","muncul","menekankan","memberdayakan","memungkinkan","menghadapi","bertahan","meningkatkan","memperkaya","memastikan","memerlukan"];
-    
-    let fullVerbs = [];
-    for (let i = 0; i < 1000; i++) { let idx = i % basicVerbs.length; fullVerbs.push({ english: basicVerbs[idx], indonesian: basicIndo[idx] }); }
-    for (let i = 0; i < 1000; i++) { let idx = i % intermediateVerbs.length; fullVerbs.push({ english: intermediateVerbs[idx], indonesian: intermediateIndo[idx] }); }
-    for (let i = 0; i < 1000; i++) { let idx = i % advancedVerbs.length; fullVerbs.push({ english: advancedVerbs[idx], indonesian: advancedIndo[idx] }); }
-    fullVerbs = fullVerbs.slice(0, 3000);
-    
-    const PAIRS_PER_LEVEL = 10;
-    const TOTAL_LEVELS = 300;
-    function getPairsForLevel(level) { const start = (level-1)*PAIRS_PER_LEVEL; return fullVerbs.slice(start, start+PAIRS_PER_LEVEL); }
-    function getPhaseInfo(level) {
-        if (level <= 100) return { name: "BASIC", icon: "🌱", color: "#86efac" };
-        if (level <= 200) return { name: "INTERMEDIATE", icon: "⚡", color: "#facc15" };
-        return { name: "ADVANCED", icon: "🚀", color: "#f97316" };
-    }
-    
-    let currentLevel = 1, currentPairs = [], englishCards = [], indoCards = [], selectedType = null, selectedId = null, matchedCount = 0, blockInput = false;
-    const levelSelect = document.getElementById('levelSelect'), englishContainer = document.getElementById('englishList'), indonesianContainer = document.getElementById('indonesianList');
-    const matchCountSpan = document.getElementById('matchCount'), totalPairsSpan = document.getElementById('totalPairs'), currentLevelDisplaySpan = document.getElementById('currentLevelDisplay');
-    const phaseIndicatorSpan = document.getElementById('phaseIndicator'), phaseBadge = document.getElementById('phaseBadge'), statusMessageDiv = document.getElementById('statusMessage');
-    const resetBtn = document.getElementById('resetLevelBtn'), prevBtn = document.getElementById('prevLevelBtn'), nextBtnLevel = document.getElementById('nextLevelBtn');
-    const phaseBasicBtn = document.getElementById('phaseBasicBtn'), phaseInterBtn = document.getElementById('phaseInterBtn'), phaseAdvBtn = document.getElementById('phaseAdvBtn');
-    
-    for (let i=1; i<=TOTAL_LEVELS; i++) { let opt = document.createElement('option'); opt.value=i; let ph=getPhaseInfo(i); opt.innerText=`Lv.${i} ${ph.icon}`; levelSelect.appendChild(opt); }
-    
-    function shuffleArray(arr) { for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
-    
-    // ======================== SOUND EFFECTS & SPEECH ========================
-    let audioCtx = null;
-    let speechSynth = window.speechSynthesis;
-    function initAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } return audioCtx; }
-    
-    // Pelafalan kata Inggris menggunakan Web Speech API (native English)
-    function speakEnglishWord(word) {
-        if (!window.speechSynthesis) {
-            console.warn("Speech not supported");
-            return;
-        }
-        // Batalkan antrean sebelumnya agar tidak tumpuk
-        speechSynth.cancel();
-        const utterance = new SpeechSynthesisUtterance(word);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.85;
-        utterance.pitch = 1.0;
-        utterance.volume = 1;
-        // Coba pilih suara perempuan jika ada
-        let voices = speechSynth.getVoices();
-        if (voices.length) {
-            const enVoice = voices.find(voice => voice.lang === 'en-US' && voice.name.includes('Google')) || voices.find(voice => voice.lang === 'en-US');
-            if (enVoice) utterance.voice = enVoice;
-        }
-        speechSynth.speak(utterance);
-        // efek visual pada kartu (pulse)
-    }
-    
-    function playCorrectSound() {
-        try { const ctx = initAudio(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 880; gain.gain.setValueAtTime(0.2, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.25); osc.start(); osc.stop(ctx.currentTime+0.25); setTimeout(()=>{ const osc2=ctx.createOscillator(); const gain2=ctx.createGain(); osc2.connect(gain2); gain2.connect(ctx.destination); osc2.frequency.value=1100; gain2.gain.setValueAtTime(0.18, ctx.currentTime); gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.3); osc2.start(); osc2.stop(ctx.currentTime+0.3); }, 120); ctx.resume(); } catch(e){} }
-    function playWrongSound() {
-        try { const ctx = initAudio(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 450; gain.gain.setValueAtTime(0.18, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.3); osc.start(); osc.stop(ctx.currentTime+0.3); setTimeout(()=>{ const osc2=ctx.createOscillator(); const gain2=ctx.createGain(); osc2.connect(gain2); gain2.connect(ctx.destination); osc2.frequency.value=330; gain2.gain.setValueAtTime(0.15, ctx.currentTime); gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.35); osc2.start(); osc2.stop(ctx.currentTime+0.35); }, 150); ctx.resume(); } catch(e){} }
-    function playLevelCompleteFanfare() {
-        try { const ctx = initAudio(); [523, 659, 784, 1046].forEach((freq,idx)=>{ setTimeout(()=>{ const osc=ctx.createOscillator(); const gain=ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value=freq; gain.gain.setValueAtTime(0.18, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.35); osc.start(); osc.stop(ctx.currentTime+0.35); }, idx*160); }); ctx.resume(); } catch(e){} }
-    
-    function showRewardPopup(message, emoji="🎉") {
-        const popup = document.createElement('div'); popup.className = 'reward-popup'; popup.innerText = `${emoji} ${message} ${emoji}`; document.body.appendChild(popup);
-        setTimeout(()=> popup.remove(), 900);
-        const star = document.createElement('div'); star.className = 'star-burst'; star.innerHTML = '⭐✨'; star.style.left = (window.innerWidth/2 - 25)+'px'; star.style.top = (window.innerHeight/2 - 40)+'px';
-        document.body.appendChild(star); setTimeout(()=> star.remove(), 600);
-    }
-    function createConfetti() {
-        for(let i=0;i<60;i++){ const p = document.createElement('div'); p.className='confetti-particle'; p.style.left=Math.random()*100+'%'; p.style.top='30%'; p.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(p); setTimeout(()=>p.remove(),800); }
-    }
-    
-    function updatePhaseUI() { const phase=getPhaseInfo(currentLevel); phaseIndicatorSpan.innerText=phase.name; phaseBadge.innerHTML=`${phase.icon} ${phase.name}`; phaseBadge.style.background=phase.color+'20'; phaseBadge.style.color=phase.color; phaseBasicBtn.classList.remove('active'); phaseInterBtn.classList.remove('active'); phaseAdvBtn.classList.remove('active'); if(currentLevel<=100) phaseBasicBtn.classList.add('active'); else if(currentLevel<=200) phaseInterBtn.classList.add('active'); else phaseAdvBtn.classList.add('active'); }
-    
-    function initLevel(level) {
-        currentLevel = Math.min(TOTAL_LEVELS, Math.max(1, level));
-        currentPairs = getPairsForLevel(currentLevel);
-        let newEng=[], newIndo=[];
-        for(let i=0;i<currentPairs.length;i++){ newEng.push({id:i, text:currentPairs[i].english, pairId:i, matched:false}); newIndo.push({id:i, text:currentPairs[i].indonesian, pairId:i, matched:false}); }
-        englishCards = shuffleArray([...newEng]); indoCards = shuffleArray([...newIndo]);
-        matchedCount=0; selectedType=null; selectedId=null; blockInput=false;
-        updateStatsUI(); updatePhaseUI(); renderCards();
-        setStatusMessage(`🎯 Level ${currentLevel} · ${getPhaseInfo(currentLevel).name} — Cocokkan 10 pasang! (🔊 untuk dengar)`, "#fef9c3");
-    }
-    function updateStatsUI() { matchCountSpan.innerText=matchedCount; totalPairsSpan.innerText=currentPairs.length; currentLevelDisplaySpan.innerText=currentLevel; levelSelect.value=currentLevel; }
-    function setStatusMessage(msg,bg=null){ statusMessageDiv.innerText=msg; if(bg) statusMessageDiv.style.background=bg; setTimeout(()=>{ if(statusMessageDiv.innerText===msg && !blockInput) statusMessageDiv.style.background="#fef9c3"; },1600); }
-    function getCardByType(type,id){ return type==='eng'? englishCards.find(c=>c.id===id): indoCards.find(c=>c.id===id); }
-    function setCardMatched(type,id,val){ if(type==='eng'){ let idx=englishCards.findIndex(c=>c.id===id); if(idx!==-1) englishCards[idx].matched=val; } else { let idx=indoCards.findIndex(c=>c.id===id); if(idx!==-1) indoCards[idx].matched=val; } }
-    function animateCard(type,id,animType){ const selector=type==='eng'?`.eng-card[data-id='${id}']`:`.ind-card[data-id='${id}']`; const el=document.querySelector(selector); if(el){ el.classList.add(animType==='match'?'match-animation':'wrong-animation'); setTimeout(()=>el.classList.remove(animType==='match'?'match-animation':'wrong-animation'),450); } }
-    function clearSelectedHighlight(){ document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected')); }
-    
-    // Fungsi untuk memicu speak dari kartu Inggris
-    function triggerSpeak(cardId, event) {
-        event.stopPropagation(); // agar tidak memicu click kartu
-        const card = englishCards.find(c => c.id === cardId);
-        if (card && !card.matched) {
-            speakEnglishWord(card.text);
-            // efek pulse pada ikon speaker (atau kartu)
-            const selector = `.eng-card[data-id='${cardId}'] .speak-icon`;
-            const icon = document.querySelector(selector);
-            if (icon) icon.classList.add('speak-pulse');
-            setTimeout(() => { if(icon) icon.classList.remove('speak-pulse'); }, 400);
-        }
-    }
-    
-    function handleCardClick(type, cardId, pairId, matched){
-        if(blockInput){ setStatusMessage("🏁 Selesai! Klik Next","#ffe0b5"); return; }
-        if(matched){ setStatusMessage("✅ Sudah dipasangkan!","#d9f99d"); return; }
-        if(selectedType===null){
-            selectedType=type; selectedId=cardId; renderCards();
-            setStatusMessage(`🔍 "${getCardByType(type,cardId).text}" — pilih pasangan di kolom lain`,"#fed7aa");
-            return;
-        }
-        const firstType=selectedType, firstId=selectedId;
-        const firstCard=getCardByType(firstType,firstId), secondCard=getCardByType(type,cardId);
-        if(!firstCard || !secondCard) return;
-        if(firstType===type){
-            clearSelectedHighlight(); selectedType=type; selectedId=cardId; renderCards();
-            setStatusMessage(`🔄 Ganti: "${getCardByType(type,cardId).text}"`,"#fed7aa");
-            return;
-        }
-        if(firstCard.pairId === secondCard.pairId){
-            if(firstCard.matched || secondCard.matched){ clearSelectedHighlight(); selectedType=null; renderCards(); setStatusMessage("⚠️ Sudah dipasangkan","#fecaca"); return; }
-            setCardMatched(firstType,firstId,true); setCardMatched(type,cardId,true);
-            matchedCount++; updateStatsUI();
-            playCorrectSound();
-            animateCard(firstType,firstId,'match'); animateCard(type,cardId,'match');
-            clearSelectedHighlight(); selectedType=null; renderCards();
-            setStatusMessage("🎉 MATCH! +1 poin 🎉","#bbf7d0");
-            showRewardPopup("Perfect Match!", "🎯");
-            createConfetti();
-            if(matchedCount === currentPairs.length){
-                playLevelCompleteFanfare();
-                showRewardPopup(`LEVEL ${currentLevel} COMPLETE! 🏆`, "🏆");
-                createConfetti(); createConfetti();
-                setStatusMessage(`🎉✨ LEVEL ${currentLevel} COMPLETE! ✨🎉`,"#bef264");
-                blockInput=true;
-            }
-        } else {
-            playWrongSound();
-            animateCard(firstType,firstId,'wrong'); animateCard(type,cardId,'wrong');
-            setStatusMessage(`❌ "${firstCard.text}" ≠ "${secondCard.text}"`,"#fee2e2");
-            clearSelectedHighlight(); selectedType=null; renderCards();
-        }
-    }
-    
-    function renderCards(){
-        englishContainer.innerHTML=''; indonesianContainer.innerHTML='';
-        englishCards.forEach(card=>{
-            const div=document.createElement('div'); div.className=`card eng-card ${card.matched?'matched':''}`;
-            if(selectedType==='eng' && selectedId===card.id && !card.matched) div.classList.add('selected');
-            div.setAttribute('data-id',card.id);
-            // Konten: teks + ikon speaker (hanya jika belum matched)
-            const textSpan = document.createElement('span'); textSpan.className = 'card-text'; textSpan.innerText = card.text;
-            div.appendChild(textSpan);
-            if(!card.matched){
-                const speaker = document.createElement('span'); speaker.className = 'speak-icon'; speaker.innerHTML = '🔊';
-                speaker.onclick = (e) => triggerSpeak(card.id, e);
-                div.appendChild(speaker);
-            }
-            if(!card.matched && !blockInput){
-                div.addEventListener('click', (e) => {
-                    // jangan trigger jika yang diklik adalah speaker (sudah di-handle)
-                    if(e.target.classList && e.target.classList.contains('speak-icon')) return;
-                    handleCardClick('eng', card.id, card.pairId, card.matched);
-                });
-            }
-            englishContainer.appendChild(div);
-        });
-        
-        indoCards.forEach(card=>{
-            const div=document.createElement('div'); div.className=`card ind-card ${card.matched?'matched':''}`;
-            if(selectedType==='ind' && selectedId===card.id && !card.matched) div.classList.add('selected');
-            div.setAttribute('data-id',card.id); div.innerText = card.text;
-            if(!card.matched && !blockInput){
-                div.addEventListener('click',()=>handleCardClick('ind',card.id,card.pairId,card.matched));
-            }
-            indonesianContainer.appendChild(div);
-        });
-    }
-    
-    function resetCurrentLevel(){ initLevel(currentLevel); }
-    function changeLevel(delta){ let newLv=currentLevel+delta; if(newLv<1) newLv=1; if(newLv>TOTAL_LEVELS) newLv=TOTAL_LEVELS; if(newLv!==currentLevel){ currentLevel=newLv; initLevel(currentLevel); setStatusMessage(`📖 Pindah ke Level ${currentLevel} · ${getPhaseInfo(currentLevel).name}`,"#e0f2fe"); } }
-    function jumpToPhase(phaseType){ let target=1; if(phaseType==='inter') target=101; if(phaseType==='adv') target=201; if(currentLevel!==target){ currentLevel=target; initLevel(currentLevel); setStatusMessage(`🚀 Phase ${getPhaseInfo(currentLevel).name} — Level ${currentLevel}`,"#d9f99d"); } }
-    
-    resetBtn.addEventListener('click',resetCurrentLevel); prevBtn.addEventListener('click',()=>changeLevel(-1)); nextBtnLevel.addEventListener('click',()=>changeLevel(1));
-    levelSelect.addEventListener('change',(e)=>{ currentLevel=parseInt(e.target.value); initLevel(currentLevel); });
-    phaseBasicBtn.addEventListener('click',()=>jumpToPhase('basic')); phaseInterBtn.addEventListener('click',()=>jumpToPhase('inter')); phaseAdvBtn.addEventListener('click',()=>jumpToPhase('adv'));
-    
-    // Inisialisasi voices untuk speech (load voices)
-    if (speechSynth) {
-        speechSynth.getVoices();
-    }
-    document.body.addEventListener('click', ()=>{ if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }, { once: true });
-    initLevel(1);
+const basicVerbs = ["be","have","do","say","get","make","go","know","take","see","come","think","look","want","give","use","find","tell","ask","work","seem","feel","try","leave","call","need","become","put","mean","keep","let","begin","help","talk","turn","start","show","hear","play","run","move","like","live","believe","hold","bring","happen","write","sit","stand","lose","pay","meet","include","continue","set","learn","change","lead","understand","watch","follow","stop","create","speak","allow","win","decide","explain","hope","develop","carry","train","eat","sleep","wake","drive","fly","swim","read"];
+const basicIndo = ["menjadi/ada","memiliki","melakukan","mengatakan","mendapatkan","membuat","pergi","tahu","mengambil","melihat","datang","berpikir","melihat/memandang","ingin","memberi","menggunakan","menemukan","memberi tahu","bertanya","bekerja","tampak","merasa","mencoba","meninggalkan","memanggil","memerlukan","menjadi","meletakkan","berarti","menjaga","membiarkan","memulai","membantu","berbicara","memutar/berbelok","memulai","menunjukkan","mendengar","bermain","berlari","bergerak","menyukai","tinggal","percaya","memegang","membawa","terjadi","menulis","duduk","berdiri","kehilangan","membayar","bertemu","termasuk","melanjutkan","mengatur","belajar","mengubah","memimpin","mengerti","menonton","mengikuti","berhenti","menciptakan","berbicara","mengizinkan","menang","memutuskan","menjelaskan","berharap","mengembangkan","membawa","melatih","makan","tidur","bangun","mengemudi","terbang","berenang","membaca"];
+const intermediateVerbs = ["achieve","admire","admit","adopt","advise","affect","announce","apologize","appear","apply","arrange","attack","avoid","borrow","cancel","capture","celebrate","collect","compare","compete","complain","complete","concern","confirm","connect","consider","consist","consult","contain","convince","cooperate","correct","criticize","declare","decrease","defend","define","deliver","demand","deny","describe","destroy","determine","discover","discuss","disturb","earn","encourage","enjoy","establish","estimate","evaluate","examine","exchange","exist","expand","expect","experience","explore","express","extend","fail","fear","fill","fix","focus","forgive","gain","gather","generate","guarantee","handle","hate","identify","ignore","improve","increase","indicate","influence","inform"];
+const intermediateIndo = ["mencapai","mengagumi","mengakui","mengadopsi","menasihati","memengaruhi","mengumumkan","meminta maaf","muncul/tampak","melamar/menerapkan","mengatur","menyerang","menghindari","meminjam","membatalkan","menangkap","merayakan","mengumpulkan","membandingkan","bersaing","mengeluh","menyelesaikan","menyangkut","mengkonfirmasi","menghubungkan","mempertimbangkan","terdiri dari","berkonsultasi","berisi","meyakinkan","bekerja sama","mengoreksi","mengkritik","menyatakan","menurunkan","membela","mendefinisikan","mengirimkan","menuntut","menyangkal","mendeskripsikan","menghancurkan","menentukan","menemukan","mendiskusikan","mengganggu","menghasilkan uang","mendorong","menikmati","membangun","memperkirakan","mengevaluasi","memeriksa","menukar","ada","memperluas","mengharapkan","mengalami","menjelajahi","mengekspresikan","memperpanjang","gagal","takut","mengisi","memperbaiki","fokus","memaafkan","memperoleh","mengumpulkan","menghasilkan","menjamin","menangani","membenci","mengidentifikasi","mengabaikan","memperbaiki","meningkatkan","menunjukkan","memengaruhi","memberi tahu"];
+const advancedVerbs = ["abandon","abolish","absorb","accommodate","accompany","accomplish","accuse","acknowledge","adapt","advocate","allocate","anticipate","appreciate","approach","assemble","assess","assign","assist","assume","assure","clarify","collaborate","commemorate","compensate","compile","comprehend","compromise","conceive","condemn","conduct","confess","confine","confront","conquer","conserve","consolidate","constitute","constrain","contemplate","contradict","contribute","convey","convict","coordinate","correspond","debate","dedicate","delegate","demonstrate","depict","deprive","derive","descend","detect","deteriorate","devote","differentiate","diminish","discard","discern","disclose","discriminate","displace","dispose","distinguish","distort","divert","dominate","eliminate","embrace","emerge","emphasize","empower","enable","encounter","endure","enhance","enrich","ensure","entail"];
+const advancedIndo = ["meninggalkan","menghapuskan","menyerap","menampung","menemani","mencapai","menuduh","mengakui","menyesuaikan","menganjurkan","mengalokasikan","mengantisipasi","menghargai","mendekati","merakit","menilai","menugaskan","membantu","berasumsi","meyakinkan","memperjelas","berkolaborasi","memperingati","memberi kompensasi","menyusun","memahami","berkompromi","menciptakan","mengutuk","melakukan","mengaku","membatasi","menghadapi","menaklukkan","melestarikan","menggabungkan","membentuk","membatasi","merenungkan","membantah","berkontribusi","menyampaikan","menghukum","mengoordinasikan","berkorespondensi","berdebat","mendedikasikan","mendelegasikan","mendemonstrasikan","menggambarkan","merampas","berasal","turun","mendeteksi","memburuk","mengabdikan","membedakan","mengurangi","membuang","membedakan","mengungkapkan","mendiskriminasi","memindahkan","membuang","membedakan","memutarbalikkan","mengalihkan","mendominasi","menghilangkan","merangkul","muncul","menekankan","memberdayakan","memungkinkan","menghadapi","bertahan","meningkatkan","memperkaya","memastikan","memerlukan"];
+let fullVerbs = [];
+for (let i = 0; i < 1000; i++) { let idx = i % basicVerbs.length; fullVerbs.push({ english: basicVerbs[idx], indonesian: basicIndo[idx] }); }
+for (let i = 0; i < 1000; i++) { let idx = i % intermediateVerbs.length; fullVerbs.push({ english: intermediateVerbs[idx], indonesian: intermediateIndo[idx] }); }
+for (let i = 0; i < 1000; i++) { let idx = i % advancedVerbs.length; fullVerbs.push({ english: advancedVerbs[idx], indonesian: advancedIndo[idx] }); }
+fullVerbs = fullVerbs.slice(0, 3000);
+const PAIRS_PER_LEVEL = 10, TOTAL_LEVELS = 300;
+function getPairsForLevel(level) { const start = (level-1)*PAIRS_PER_LEVEL; return fullVerbs.slice(start, start+PAIRS_PER_LEVEL); }
+function getPhaseInfo(level) { if (level <= 100) return { name: "BASIC", icon: "🌱", color: "#86efac" }; if (level <= 200) return { name: "INTERMEDIATE", icon: "⚡", color: "#facc15" }; return { name: "ADVANCED", icon: "🚀", color: "#f97316" }; }
+let currentLevel = 1, currentPairs = [], englishCards = [], indoCards = [], selectedType = null, selectedId = null, matchedCount = 0, blockInput = false;
+const levelSelect = document.getElementById('levelSelect'), englishContainer = document.getElementById('englishList'), indonesianContainer = document.getElementById('indonesianList');
+const matchCountSpan = document.getElementById('matchCount'), totalPairsSpan = document.getElementById('totalPairs'), currentLevelDisplaySpan = document.getElementById('currentLevelDisplay');
+const phaseIndicatorSpan = document.getElementById('phaseIndicator'), phaseBadge = document.getElementById('phaseBadge'), statusMessageDiv = document.getElementById('statusMessage');
+const resetBtn = document.getElementById('resetLevelBtn'), prevBtn = document.getElementById('prevLevelBtn'), nextBtnLevel = document.getElementById('nextLevelBtn');
+const phaseBasicBtn = document.getElementById('phaseBasicBtn'), phaseInterBtn = document.getElementById('phaseInterBtn'), phaseAdvBtn = document.getElementById('phaseAdvBtn');
+for (let i=1; i<=TOTAL_LEVELS; i++) { let opt = document.createElement('option'); opt.value=i; opt.innerText=`Lv.${i}`; levelSelect.appendChild(opt); }
+function shuffleArray(arr) { for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+let audioCtx = null, speechSynth = window.speechSynthesis;
+function speakEnglishWord(word) { if (!window.speechSynthesis) return; speechSynth.cancel(); const utterance = new SpeechSynthesisUtterance(word); utterance.lang = 'en-US'; utterance.rate = 0.85; speechSynth.speak(utterance); }
+function playCorrectSound() { try { const ctx = audioCtx || new AudioContext(); audioCtx = ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 880; gain.gain.setValueAtTime(0.2, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.25); osc.start(); osc.stop(ctx.currentTime+0.25); setTimeout(()=>{ const osc2=ctx.createOscillator(); const gain2=ctx.createGain(); osc2.connect(gain2); gain2.connect(ctx.destination); osc2.frequency.value=1100; gain2.gain.setValueAtTime(0.18, ctx.currentTime); gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.3); osc2.start(); osc2.stop(ctx.currentTime+0.3); }, 120); ctx.resume(); } catch(e){} }
+function playWrongSound() { try { const ctx = audioCtx || new AudioContext(); audioCtx = ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 450; gain.gain.setValueAtTime(0.18, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.3); osc.start(); osc.stop(ctx.currentTime+0.3); setTimeout(()=>{ const osc2=ctx.createOscillator(); const gain2=ctx.createGain(); osc2.connect(gain2); gain2.connect(ctx.destination); osc2.frequency.value=330; gain2.gain.setValueAtTime(0.15, ctx.currentTime); gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.35); osc2.start(); osc2.stop(ctx.currentTime+0.35); }, 150); ctx.resume(); } catch(e){} }
+function playLevelCompleteFanfare() { try { const ctx = audioCtx || new AudioContext(); audioCtx = ctx; [523, 659, 784, 1046].forEach((freq,idx)=>{ setTimeout(()=>{ const osc=ctx.createOscillator(); const gain=ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value=freq; gain.gain.setValueAtTime(0.18, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.35); osc.start(); osc.stop(ctx.currentTime+0.35); }, idx*160); }); ctx.resume(); } catch(e){} }
+function createConfetti() { for(let i=0;i<40;i++){ const p = document.createElement('div'); p.className='confetti-particle'; p.style.left=Math.random()*100+'%'; p.style.top='30%'; p.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(p); setTimeout(()=>p.remove(),800); } }
+function updatePhaseUI() { const phase=getPhaseInfo(currentLevel); phaseIndicatorSpan.innerText=phase.name; phaseBadge.innerHTML=`${phase.icon} ${phase.name}`; phaseBasicBtn.classList.remove('active'); phaseInterBtn.classList.remove('active'); phaseAdvBtn.classList.remove('active'); if(currentLevel<=100) phaseBasicBtn.classList.add('active'); else if(currentLevel<=200) phaseInterBtn.classList.add('active'); else phaseAdvBtn.classList.add('active'); }
+function initLevel(level) { currentLevel = Math.min(TOTAL_LEVELS, Math.max(1, level)); currentPairs = getPairsForLevel(currentLevel); let newEng=[], newIndo=[]; for(let i=0;i<currentPairs.length;i++){ newEng.push({id:i, text:currentPairs[i].english, pairId:i, matched:false}); newIndo.push({id:i, text:currentPairs[i].indonesian, pairId:i, matched:false}); } englishCards = shuffleArray([...newEng]); indoCards = shuffleArray([...newIndo]); matchedCount=0; selectedType=null; selectedId=null; blockInput=false; updateStatsUI(); updatePhaseUI(); renderCards(); statusMessageDiv.innerText=`🎯 Level ${currentLevel} · ${getPhaseInfo(currentLevel).name}`; }
+function updateStatsUI() { matchCountSpan.innerText=matchedCount; totalPairsSpan.innerText=currentPairs.length; currentLevelDisplaySpan.innerText=currentLevel; levelSelect.value=currentLevel; }
+function getCardByType(type,id){ return type==='eng'? englishCards.find(c=>c.id===id): indoCards.find(c=>c.id===id); }
+function setCardMatched(type,id,val){ if(type==='eng'){ let idx=englishCards.findIndex(c=>c.id===id); if(idx!==-1) englishCards[idx].matched=val; } else { let idx=indoCards.findIndex(c=>c.id===id); if(idx!==-1) indoCards[idx].matched=val; } }
+function animateCard(type,id,animType){ const selector=type==='eng'?`.eng-card[data-id='${id}']`:`.ind-card[data-id='${id}']`; const el=document.querySelector(selector); if(el){ el.classList.add(animType==='match'?'match-animation':'wrong-animation'); setTimeout(()=>el.classList.remove(animType==='match'?'match-animation':'wrong-animation'),450); } }
+function clearSelectedHighlight(){ document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected')); }
+function triggerSpeak(cardId, event) { event.stopPropagation(); const card = englishCards.find(c => c.id === cardId); if (card && !card.matched) { speakEnglishWord(card.text); const icon = document.querySelector(`.eng-card[data-id='${cardId}'] .speak-icon`); if(icon) icon.classList.add('speak-pulse'); setTimeout(() => { if(icon) icon.classList.remove('speak-pulse'); }, 400); } }
+function handleCardClick(type, cardId, pairId, matched){ if(blockInput){ statusMessageDiv.innerText="🏁 Selesai! Klik Next"; return; } if(matched){ statusMessageDiv.innerText="✅ Sudah dipasangkan!"; return; } if(selectedType===null){ selectedType=type; selectedId=cardId; renderCards(); statusMessageDiv.innerText=`🔍 "${getCardByType(type,cardId).text}" — pilih pasangan`; return; } const firstType=selectedType, firstId=selectedId; const firstCard=getCardByType(firstType,firstId), secondCard=getCardByType(type,cardId); if(!firstCard||!secondCard) return; if(firstType===type){ clearSelectedHighlight(); selectedType=type; selectedId=cardId; renderCards(); statusMessageDiv.innerText=`🔄 Ganti: "${getCardByType(type,cardId).text}"`; return; } if(firstCard.pairId === secondCard.pairId){ if(firstCard.matched || secondCard.matched){ clearSelectedHighlight(); selectedType=null; renderCards(); statusMessageDiv.innerText="⚠️ Sudah dipasangkan"; return; } setCardMatched(firstType,firstId,true); setCardMatched(type,cardId,true); matchedCount++; updateStatsUI(); playCorrectSound(); animateCard(firstType,firstId,'match'); animateCard(type,cardId,'match'); clearSelectedHighlight(); selectedType=null; renderCards(); statusMessageDiv.innerText="🎉 MATCH! +1 poin 🎉"; createConfetti(); if(matchedCount === currentPairs.length){ playLevelCompleteFanfare(); createConfetti(); createConfetti(); statusMessageDiv.innerText=`🎉✨ LEVEL ${currentLevel} COMPLETE! ✨🎉`; blockInput=true; } } else { playWrongSound(); animateCard(firstType,firstId,'wrong'); animateCard(type,cardId,'wrong'); statusMessageDiv.innerText=`❌ "${firstCard.text}" ≠ "${secondCard.text}"`; clearSelectedHighlight(); selectedType=null; renderCards(); } }
+function renderCards(){ englishContainer.innerHTML=''; indonesianContainer.innerHTML=''; englishCards.forEach(card=>{ const div=document.createElement('div'); div.className=`card eng-card ${card.matched?'matched':''}`; if(selectedType==='eng' && selectedId===card.id && !card.matched) div.classList.add('selected'); div.setAttribute('data-id',card.id); const textSpan=document.createElement('span'); textSpan.className='card-text'; textSpan.innerText=card.text; div.appendChild(textSpan); if(!card.matched){ const speaker=document.createElement('span'); speaker.className='speak-icon'; speaker.innerHTML='🔊'; speaker.onclick=(e)=>triggerSpeak(card.id,e); div.appendChild(speaker); } if(!card.matched && !blockInput){ div.addEventListener('click',(e)=>{ if(e.target.classList && e.target.classList.contains('speak-icon')) return; handleCardClick('eng',card.id,card.pairId,card.matched); }); } englishContainer.appendChild(div); }); indoCards.forEach(card=>{ const div=document.createElement('div'); div.className=`card ind-card ${card.matched?'matched':''}`; if(selectedType==='ind' && selectedId===card.id && !card.matched) div.classList.add('selected'); div.setAttribute('data-id',card.id); div.innerText=card.text; if(!card.matched && !blockInput){ div.addEventListener('click',()=>handleCardClick('ind',card.id,card.pairId,card.matched)); } indonesianContainer.appendChild(div); }); }
+function resetCurrentLevel(){ initLevel(currentLevel); }
+function changeLevel(delta){ let newLv=currentLevel+delta; if(newLv<1) newLv=1; if(newLv>TOTAL_LEVELS) newLv=TOTAL_LEVELS; if(newLv!==currentLevel){ currentLevel=newLv; initLevel(currentLevel); statusMessageDiv.innerText=`📖 Pindah ke Level ${currentLevel}`; } }
+function jumpToPhase(phaseType){ let target=1; if(phaseType==='inter') target=101; if(phaseType==='adv') target=201; if(currentLevel!==target){ currentLevel=target; initLevel(currentLevel); statusMessageDiv.innerText=`🚀 Phase ${getPhaseInfo(currentLevel).name} — Level ${currentLevel}`; } }
+resetBtn.addEventListener('click',resetCurrentLevel); prevBtn.addEventListener('click',()=>changeLevel(-1)); nextBtnLevel.addEventListener('click',()=>changeLevel(1));
+levelSelect.addEventListener('change',(e)=>{ currentLevel=parseInt(e.target.value); initLevel(currentLevel); });
+phaseBasicBtn.addEventListener('click',()=>jumpToPhase('basic')); phaseInterBtn.addEventListener('click',()=>jumpToPhase('inter')); phaseAdvBtn.addEventListener('click',()=>jumpToPhase('adv'));
+document.body.addEventListener('click', ()=>{ if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }, { once: true });
+initLevel(1);
 </script>
 </body>
 </html>
